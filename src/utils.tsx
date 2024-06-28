@@ -90,6 +90,8 @@ async function parseMeta(
 
   let propZotero = [];  
 
+  let zoteroImport = false;
+
   //get all properties - fix later
   if (curPage?.page.properties != undefined) {
     propList = curPage?.page.properties;
@@ -103,6 +105,7 @@ async function parseMeta(
   }
 
   if (propList.title[0] == "@") {  // and bib in tags? or a special tag like "zotero-import", added as default tag to LS-zotero settings
+    zoteroImport = true;
     propList.title = '"' + propList.title + '"';
 
     for (let [prop, value] of Object.entries(propList)) {
@@ -174,17 +177,33 @@ async function parseMeta(
   
   //convert propList to Hugo yaml
   // https://gohugo.io/content-management/front-matter/
-  let ret = `---`;
+  let result = `---`;
   for (let [prop, value] of Object.entries(propList)) {
     if (Array.isArray(value)) {
-      ret += `\n${prop}:`;
-      value.forEach((element) => (ret += `\n- ${element}`));
+      result += `\n${prop}:`;
+      value.forEach((element) => (result += `\n- ${element}`));
     } else {
-      ret += `\n${prop}: ${value}`;
+      result += `\n${prop}: ${value}`;
     }
   }
-  ret += "\n---";
-  return ret;
+  result += "\n---";
+
+  if (zoteroImport) {
+    let zoteroMeta = ""
+    zoteroMeta = "- Zotero Metadata\n"
+    for (let [prop, value] of Object.entries(propZotero)) {
+      if (Array.isArray(value)) {
+        zoteroMeta += `\t- {prop}\n`;
+        value.forEach((element) => (zoteroMeta += `\t\t- ${element}\n`));
+      } else {
+        zoteroMeta += `\t- ${prop}: ${value}\n`;
+      }
+    }
+    zoteroMeta = parseLinks(zoteroMeta, allPublicPages)
+    result = result + zoteroMeta
+  }
+
+  return result;
 }
 
 export async function getBlocksInPage(
