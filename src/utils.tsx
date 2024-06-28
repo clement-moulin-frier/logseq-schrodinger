@@ -189,12 +189,18 @@ async function parseMeta(
   result += "\n---";
 
   if (zoteroImport) {
-    let zoteroMeta = ""
+    let zoteroMeta = "\n\n"
     zoteroMeta = "- Zotero Metadata\n"
     for (let [prop, value] of Object.entries(propZotero)) {
       if (Array.isArray(value)) {
-        zoteroMeta += `\t- {prop}\n`;
-        value.forEach((element) => (zoteroMeta += `\t\t- ${element}\n`));
+        zoteroMeta += `\t- ${prop}\n`;
+        value.forEach(function(element) {
+          if (prop == 'authors' || prop == 'tags') {
+            element = `[[${element}]]`
+          }
+          zoteroMeta += `\t\t- ${element}\n`;
+        }
+      );
       } else {
         zoteroMeta += `\t- ${prop}: ${value}\n`;
       }
