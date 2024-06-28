@@ -100,8 +100,8 @@ async function parseMeta(
     propList.fileName = titleDetails[1].hugoFileName;
   }
 
-  if (propList.filename[0] == "@") {  // and bib in tags?
-    propList.fileName = `"${propList.fileName}"`;
+  if (propList.fileName[0] == "@") {  // and bib in tags?
+    propList.title = `"${propList.fileName}"`;
   }
 
   //Tags
