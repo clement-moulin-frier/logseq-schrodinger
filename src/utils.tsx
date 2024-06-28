@@ -100,6 +100,8 @@ async function parseMeta(
     propList.fileName = titleDetails[1].hugoFileName;
   }
 
+  propList.title = "TEST"
+
   //Tags
   propList.tags = curPage?.page.properties.tags
     ? curPage?.page.properties.tags
