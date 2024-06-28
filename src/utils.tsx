@@ -88,6 +88,8 @@ async function parseMeta(
 ) {
   let propList = [];
 
+  let propZotero = [];  
+
   //get all properties - fix later
   if (curPage?.page.properties != undefined) {
     propList = curPage?.page.properties;
@@ -100,8 +102,17 @@ async function parseMeta(
     propList.fileName = titleDetails[1].hugoFileName;
   }
 
-  if (propList.title[0] == "@") {  // and bib in tags?
+  if (propList.title[0] == "@") {  // and bib in tags? or a special tag like "zotero-import", added as default tag to LS-zotero settings
     propList.title = '"' + propList.title + '"';
+
+    for (let [prop, value] of Object.entries(propList)) {
+      if (prop != "public" && prop != "title") {
+        if (prop != "extra" && prop != "access-date" && prop!="links") {
+          propZotero[prop] = value;
+        }
+        delete propList[prop];
+      }
+    }
   }
 
   //Tags
