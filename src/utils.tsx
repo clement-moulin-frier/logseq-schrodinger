@@ -100,7 +100,9 @@ async function parseMeta(
     propList.fileName = titleDetails[1].hugoFileName;
   }
 
-  propList.title = "TES"
+  if (propList.filename[0] == "@") {  // and bib in tags?
+    propList.fileName = `"${propList.fileName}"`;
+  }
 
   //Tags
   propList.tags = curPage?.page.properties.tags
