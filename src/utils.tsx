@@ -189,8 +189,7 @@ async function parseMeta(
   result += "\n---";
 
   if (zoteroImport) {
-    let zoteroMeta = "\n\n"
-    zoteroMeta = "- Zotero Metadata\n"
+    let zoteroMeta = "\n\n- Zotero Metadata\n"
     for (let [prop, value] of Object.entries(propZotero)) {
       if (Array.isArray(value)) {
         zoteroMeta += `\t- ${prop}\n`;
