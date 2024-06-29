@@ -500,13 +500,22 @@ async function parseText(block: BlockEntity) {
 
   //youtube embed
   //Change {{youtube url}} via regex
-  const reYoutube = /{{youtube(.*?)}}/g;
-  text = text.replaceAll(reYoutube, (match)=>{
+  const reVideo = /{{video(.*?)}}/g;
+  text = text.replaceAll(reVideo, (match) => {
     const youtubeRegex = /(youtu(?:.*\/v\/|.*v\=|\.be\/))([A-Za-z0-9_\-]{11})/
+    const vimeoRegex = /(?:vimeo\.com\/)([0-9]+)/
+    
     const youtubeId = youtubeRegex.exec(match)
+    const vimeoId = vimeoRegex.exec(match)
+    
     if (youtubeId != null) {
       return `{{< youtube ${youtubeId[2]} >}}`
+    } else if (vimeoId != null) {
+      return `{{< vimeo ${vimeoId[1]} >}}`
     }
+    
+    // If it's neither YouTube nor Vimeo, return the original match
+    return match;
   })
 
 
